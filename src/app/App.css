@@ -1,12 +1,13 @@
 *{
     margin: 0px;
     padding: 0px;
-    font-family: cursive;
+    font-family: cursive,'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     /* filter: invert(1); */
 }
 .body{
     padding: 40px 40px 40px 40px;
     background-color: rgb(246, 227, 246);
+    height: 100%;
 }
 .container{
     background-color: rgb(232, 197, 232);
@@ -184,7 +185,18 @@
     transition: all 0.3s;
     color: white;
 }
+.showfinished{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 /* 
+
 .text:focus {
   caret-color: #000;
 } */
+.copilotKitPopup{
+    position: fixed;
+    bottom: 10;
+    right: 10;
+}

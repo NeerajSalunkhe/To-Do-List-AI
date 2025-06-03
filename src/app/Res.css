@@ -5,9 +5,9 @@
 /* Responsive for laptop (max-width: 1024px) */
 @media screen and (max-width: 1024px) {
   .container {
-    margin: 0px 100px;
-    padding: 20px;
-    height: auto;
+    margin: auto;
+    padding: 0px;
+    width: auto;
   }
   .heading {
     width: 100%;
@@ -37,10 +37,8 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
   }
   .container {
-    margin: 0px 0px;
-    padding: 10px 30px 30px 30px;
-    height: 100%;
-    min-height: 80vh;
+    margin: auto;
+    padding: 0px;
   }
   .subhead {
     flex-direction: column;
@@ -131,6 +129,6 @@
   .showfinished {
     justify-content: center;
     width: 28%;
-    font-size: 12px;
+    font-size: 10px;
   } 
 }
