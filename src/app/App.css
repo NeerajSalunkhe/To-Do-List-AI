@@ -1,0 +1,190 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: cursive;
+    /* filter: invert(1); */
+}
+.body{
+    padding: 40px 40px 40px 40px;
+    background-color: rgb(246, 227, 246);
+}
+.container{
+    background-color: rgb(232, 197, 232);
+    margin: 0px 200px 0px 200px;
+    border-radius: 25px;
+    padding: 23px 23px 20px 23px;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    /* justify-content: center; */
+    align-items: center;
+    flex-direction: column;
+    gap: 35px;
+    width: 65vw;
+    margin: auto;
+}
+.todo{
+    display: flex;
+    gap: 10px;
+}
+.todo .buttons{
+    display: flex;
+    gap: 10px;
+}
+.todologo img{
+    height: 50px;
+    width: 50px;
+    /* margin-top: 5px; */
+}
+.subhead{
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;
+    height: 20%;
+    gap: 15px;
+    font-size: 30px;
+    font-family: cursive;
+
+}
+.heading{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 35px;
+}
+.input{
+    display: flex;
+    justify-content: center;
+    width: 80%;
+    align-items: center;
+    gap: 5px;
+}
+.input .text{
+    border-radius: 40px;
+    width: 100%;
+    height: 40px;
+    background-color: rgb(234, 234, 234);
+    position: relative;
+    border: 0px;
+    padding: 10px 20px;
+    font-size: 17px;
+    cursor: pointer;
+    font-family: cursive;
+    color: grey;
+}
+.add{
+    border-radius: 40px;
+    height: 60px;
+    border: 0px;
+    width: 30%;
+    background-color: rgb(255, 102, 0);
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 1;
+}
+.add:hover{
+    background-color: rgb(255, 38, 0);
+    transition: all 0.2s;
+    color: white;   
+    font-size: 22px;
+    font-weight: bold;
+}   
+/* .input .text:hover{
+    background-color: rgb(221, 221, 221);
+    transition: all 0.2s;
+    color: rgb(163, 163, 163);
+} */
+.yourtodo{
+    width: 65%;
+    min-height: 60%;
+    max-height: 60%;
+    padding: 0px;
+}
+.todos{
+    min-height: 85%;
+    max-height: 85%;
+    overflow: auto;
+    display:flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    /* gap: 15px; */
+}
+.add.active11{
+    background-color: rgb(0, 0, 0);
+    transition: all 0s;
+    font-weight: bold;
+}
+
+.text:focus {
+  /* color: #515151;      */
+  outline: none;        
+  /* font-weight: bold;   */
+}
+*{
+    outline: none;    
+}   
+.empty{
+    display: flex;
+    justify-content: center;
+    font-size: 23px;
+    font-family: cursive;
+    font-weight: bold;
+    color: rgb(70, 70, 70);
+}
+.circleimg{
+    width: 23px;
+    height: 23px;
+    border-radius: 100px;
+    border: 0px;
+    cursor: pointer;
+}
+.circleimg:hover{
+    filter: grayscale(1);
+    transition: all 0.3s;
+}
+.circle{
+    width: 23px;
+    height: 23px;
+    border-radius: 100px;
+    border: 0px;
+    border: 1px solid #ff2929;    
+    cursor: pointer;
+}
+.circle:hover{
+    background-color: #ff2929;
+    transition: all 0.3s;
+    color: white;
+}
+.showfinished{
+    display: flex;
+    justify-content: flex-end;
+    width: 50%;
+    gap: 10px;
+}
+.mid{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 10px;
+    gap: 8px;
+    border-radius: 20px;
+    background-color: rgb(238, 238, 238);
+}
+.mid_text{
+    display: flex;
+    cursor: pointer;
+    font-weight: bold;
+}
+.mid:hover{
+    background-color: rgb(255, 136, 57);
+    transition: all 0.3s;
+    color: white;
+}
+/* 
+.text:focus {
+  caret-color: #000;
+} */

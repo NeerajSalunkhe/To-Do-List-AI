@@ -1,0 +1,136 @@
+/* app.css (responsive version) */
+
+/* Base Styles - unchanged from your original, only responsive styles added below */
+
+/* Responsive for laptop (max-width: 1024px) */
+@media screen and (max-width: 1024px) {
+  .container {
+    margin: 0px 100px;
+    padding: 20px;
+    height: auto;
+  }
+  .heading {
+    width: 100%;
+  }
+  .input .text {
+    font-size: 16px;
+  }
+  .add {
+    width: 35%;
+    font-size: 18px;
+  }
+  .yourtodo {
+    width: 90%;
+    max-height: none;
+  }
+  .todos {
+    max-height: none;
+  }
+  .showfinished {
+    width: 80%;
+  }
+}
+
+/* Responsive for mobile devices (max-width: 768px) */
+@media screen and (max-width: 768px) {
+  *{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+  }
+  .container {
+    margin: 0px 0px;
+    padding: 10px 30px 30px 30px;
+    height: 100%;
+    min-height: 80vh;
+  }
+  .subhead {
+    flex-direction: column;
+    font-size: 24px;
+    gap: 10px;
+  }
+  .todologo img {
+    height: 40px;
+    width: 40px;
+  }
+  .heading {
+    width: 100%;
+    gap: 20px;
+  }
+  .input {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+  .input .text {
+    width: 100%;
+    height: 40px;
+    font-size: 16px;
+  }
+  .add {
+    width: 100%;
+    font-size: 18px;
+    height: 50px;
+  }
+  .yourtodo {
+    width: 100%;
+    max-height: none;
+  }
+  .showfinished {
+    justify-content: center;
+    width: 70%;
+    font-size: 12px;
+  }
+  .mid {
+    width: 90%;
+    flex-direction: row;
+    padding: 8px;
+  }
+  .text {
+    flex-direction: column;
+    width: 100%;
+  }
+  .texxt {
+    font-size: 18px;
+    width: 100%;
+  }
+  .buttons {
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+    padding: 10px 0;
+  }
+  .todo {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding-right: 0px;
+    margin-right: 0px;
+    margin-left: 0px;
+  }
+  .cng{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .checkbox,.checkimg{
+    width: 30px;
+    height: 30px;
+  }
+  .text{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 0px;
+    padding-right: 10px;
+    margin-left: 0px;
+  }
+}
+
+@media screen and (max-width: 431px) {
+  .showfinished {
+    justify-content: center;
+    width: 28%;
+    font-size: 12px;
+  } 
+}
