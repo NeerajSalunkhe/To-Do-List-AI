@@ -8,7 +8,11 @@ import Typed from 'typed.js';
 import Image from 'next/image';
 import { UserButton, useUser } from '@clerk/nextjs';
 import { v4 as uuidv4 } from 'uuid';
-
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
 import {
     ClipboardList,
     CheckSquare,
@@ -119,12 +123,20 @@ const Navbar = () => {
                             <Button variant="outline" className="relative cursor-pointer p-2">Sign In</Button>
                         </SignInButton>
                     </SignedOut>
-
-                    {isLoaded && isSignedIn && (
-                        <div className='glowblue1 rounded-full flex justify-center items-center'>
-                            <UserButton afterSignOutUrl="/" />
-                        </div>
-                    )}
+                    <HoverCard>
+                        <HoverCardTrigger asChild>
+                            {isLoaded && isSignedIn && (
+                                <div className='glowblue1 rounded-full flex justify-center items-center'>
+                                    <UserButton afterSignOutUrl="/" />
+                                </div>
+                            )}
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                            <div className='text-center'>
+                                Your Profile
+                            </div>
+                        </HoverCardContent>
+                    </HoverCard>
                 </ClerkLoaded>
             </div>
         </header>

@@ -1,7 +1,8 @@
 "use client"
 
-import * as React from "react"
-import { ChevronDownIcon } from "lucide-react"
+import React, { useEffect, useState } from "react"
+import { parseDate } from "chrono-node"
+import { CalendarIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
@@ -13,70 +14,128 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
+function formatDate(date) {
+  if (!date) return ""
+  return date.toLocaleDateString("en-US", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  })
+}
+
+// 📌 Always return 5 AM time
+function getScheduledTime(date) {
+  const now = new Date();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const selectedDate = new Date(date);
+  selectedDate.setHours(0, 0, 0, 0);
+
+  const isToday = today.getTime() === selectedDate.getTime();
+  const currentHour = now.getHours();
+
+  if (isToday) {
+    if (currentHour < 23) {
+      date.setHours(23, 0, 0, 0); // 11:00 PM today
+    } else {
+      // It's already after 11PM → set to 6AM next day
+      date.setDate(date.getDate() + 1);
+      date.setHours(6, 0, 0, 0);
+    }
+  } else {
+    // For other days → always set 6:00 AM
+    date.setHours(6, 0, 0, 0);
+  }
+  return date;
+}
+
+
 export function Calendar24({ onDateTimeChange }) {
-  const [open, setOpen] = React.useState(false)
-  const [date, setDate] = React.useState()
-  const [time, setTime] = React.useState("10:30:00")
+  const [open, setOpen] = useState(false)
+  const [value, setValue] = useState("In 2 days")
+  const [date, setDate] = useState(parseDate(value) || undefined)
+  const [month, setMonth] = useState(date)
 
-  React.useEffect(() => {
-    if (date && time) {
-      const [hours, minutes, seconds] = time.split(":").map(Number)
-      const fullDate = new Date(date)
-      fullDate.setHours(hours || 0)
-      fullDate.setMinutes(minutes || 0)
-      fullDate.setSeconds(seconds || 0)
-      fullDate.setMilliseconds(0)
-
+  useEffect(() => {
+    if (date) {
+      const reminderDate = getScheduledTime(date)
       if (onDateTimeChange) {
-        onDateTimeChange(fullDate) // Send back to parent
+        onDateTimeChange(reminderDate)
       }
     }
-  }, [date, time])
+  }, [onDateTimeChange,date])
 
   return (
-    <div className="flex gap-4">
-      <div className="flex flex-col gap-2 items-center">
+    <div className="flex flex-col gap-3">
+      <Label htmlFor="date" className="px-1">
+        Set Reminder
+      </Label>
+      <div className="relative flex gap-2">
+        <Input
+          id="date"
+          value={value}
+          placeholder="e.g., Tomorrow, next Friday"
+          className="bg-background pr-10"
+          onChange={(e) => {
+            setValue(e.target.value)
+            const parsed = parseDate(e.target.value)
+            if (parsed) {
+              const updated = getScheduledTime(parsed)
+              setDate(updated)
+              setMonth(updated)
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "ArrowDown") {
+              e.preventDefault()
+              setOpen(true)
+            }
+          }}
+        />
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button
-              variant="outline"
-              id="date"
-              className="w-32 justify-between font-normal"
+              id="date-picker"
+              variant="ghost"
+              className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
             >
-              {date ? date.toLocaleDateString() : "Select date"}
-              <ChevronDownIcon />
+              <CalendarIcon className="size-3.5" />
+              <span className="sr-only">Select date</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+          <PopoverContent className="w-auto overflow-hidden p-0" align="end">
             <Calendar
               mode="single"
               selected={date}
               captionLayout="dropdown"
-              onSelect={(date) => {
-                setDate(date)
-                setOpen(false)
+              month={month}
+              onMonthChange={setMonth}
+              onSelect={(selectedDate) => {
+                if (selectedDate) {
+                  const updated = getScheduledTime(selectedDate)
+                  setDate(updated)
+                  setValue(formatDate(updated))
+                  setOpen(false)
+                }
               }}
             />
           </PopoverContent>
         </Popover>
-        <Label htmlFor="date" className="px-1">
-          Date
-        </Label>
       </div>
-      <div className="flex flex-col items-center gap-2">
+      <div className="text-muted-foreground px-1 text-sm">
+        Your reminder will be sent on{" "}
+        <span className="font-medium">{formatDate(date)}</span>{" "}
+        at{" "}
+        <span className="font-medium">
+          {date?.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
+        </span>.
+      </div>
 
-        <Input
-          type="time"
-          id="time"
-          step="1"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          className="bg-background appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"
-        />
-        <Label htmlFor="time" className="px-1">
-          Time
-        </Label>
-      </div>
     </div>
   )
 }

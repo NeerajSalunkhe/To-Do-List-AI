@@ -1,11 +1,12 @@
-// app/api/reminder-cron/route.js
 import { NextResponse } from 'next/server';
+import { POST as sendRenewals } from '../renowal/route';
 import { GET as sendReminders } from '../send-whatsapp-reminders/route';
 
 export const config = {
-  schedule: '*/1 * * * *', // Runs every 1 minute on Vercel
+  schedule: '0 6 * * *', // 6:00 AM
 };
 
 export async function GET() {
-  return await sendReminders(); // 🔁 Reuse your existing reminder logic
+  await sendRenewals(); 
+  return await sendReminders(); 
 }

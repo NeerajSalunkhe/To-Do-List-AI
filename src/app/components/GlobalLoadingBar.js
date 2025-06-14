@@ -29,7 +29,7 @@ const GlobalLoadingBar = () => {
       router.events?.off?.('routeChangeComplete', done);
       router.events?.off?.('routeChangeError', done);
     };
-  }, [pathname]);
+  }, [router.events,pathname]);
 
   return null;
 };

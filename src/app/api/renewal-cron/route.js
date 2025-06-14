@@ -1,10 +1,12 @@
-// app/api/renewal-cron/route.js
+import { NextResponse } from 'next/server';
+import { GET as sendReminders } from '../send-whatsapp-reminders/route';
 import { POST as sendRenewals } from '../renowal/route';
 
 export const config = {
-  schedule: '*/30 * * * *', // every 30 minutes
+  schedule: '0 23 * * *', // 11:00 PM
 };
 
 export async function GET() {
-  return await sendRenewals(); // ✅ okay to call POST from GET inside Vercel scheduled function
+  await sendReminders(); // 🔁 First call reminders
+  return await sendRenewals(); // Then send renewals
 }
