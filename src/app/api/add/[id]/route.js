@@ -4,7 +4,6 @@ import Todo from "@/models/todo";
 
 export async function POST(request, { params }) {
   await DbConnect();
-
   const userid = await params.id;
   if (!userid) {
     return NextResponse.json(

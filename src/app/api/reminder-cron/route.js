@@ -3,7 +3,7 @@ import { POST as sendRenewals } from '../renowal/route';
 import { GET as sendReminders } from '../send-whatsapp-reminders/route';
 
 export const config = {
-  schedule: '0 6 * * *', // 6:00 AM
+  schedule: '30 0 * * *', // 6:00 AM
 };
 
 export async function GET() {
