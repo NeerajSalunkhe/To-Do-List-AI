@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
-import { Moon, Sun } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { Moon, Sun, ClipboardList, CheckSquare, Bell, Star } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import Typed from 'typed.js';
@@ -9,26 +9,12 @@ import Image from 'next/image';
 import { UserButton, useUser } from '@clerk/nextjs';
 import { v4 as uuidv4 } from 'uuid';
 import { motion } from 'framer-motion';
-
+import Lottie from 'lottie-react';
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import {
-    ClipboardList,
-    CheckSquare,
-    Bell,
-    Star,
-} from "lucide-react";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import Lottie from 'lottie-react';
-import { useRef, useState, useEffect } from 'react';
+} from "@/components/ui/hover-card";
 import { SignedIn, SignedOut, SignInButton, ClerkLoaded } from "@clerk/nextjs";
 
 const Navbar = () => {
@@ -45,20 +31,24 @@ const Navbar = () => {
     ];
     const [animationData, setAnimationData] = useState(null);
     const lottieRef = useRef();
+    const { theme, setTheme } = useTheme();
+
     useEffect(() => {
         if (lottieRef.current) {
-            lottieRef.current.setSpeed(4); // 🔥 2x speed
+            lottieRef.current.setSpeed(4);
         }
     }, []);
+
     useEffect(() => {
         fetch('/todolist.json')
             .then((res) => res.json())
             .then(setAnimationData);
     }, []);
-    const { setTheme } = useTheme();
 
-    const authBtnStyle =
-        'border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground text-sm px-3 py-2 rounded-lg dark:bg-input/30 dark:border-input dark:hover:bg-input/50 transition-colors';
+    const toggleTheme = () => {
+        setTheme(theme === 'dark' ? 'light' : 'dark');
+    };
+
 
     return (
         <motion.header
@@ -70,25 +60,17 @@ const Navbar = () => {
                 damping: 10,
                 duration: 0.6,
             }}
-            className="w-full flex justify-between  items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-100 backdrop-blur-xs"
+            className="w-full flex justify-between items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-100 backdrop-blur-xs"
         >
-            <header className="w-full flex justify-between  items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-10 backdrop-blur-xs">
-                {/* Logo + Title */}
+            <header className="w-full flex justify-between items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-10 backdrop-blur-xs">
                 {/* Logo + Title */}
                 <div className="flex md:gap-3 gap-0 min-w-[200px]">
                     <Lottie
-                        className={`codejson 'w-25 h-25 rounded-full object-contain`}
+                        className={`codejson w-25 h-25 rounded-full object-contain`}
                         animationData={animationData}
                         loop={true}
                         lottieRef={lottieRef}
                     />
-                    {/* <Image
-                    src="/to-do-list.gif"
-                    alt="To-Do List"
-                    width={25}
-                    height={25}
-                    className="h-25 w-25 object-contain dark:invert-100"
-                /> */}
                     <h1>
                         <span className="slide md:mt-1 mt-6 my-2 mb-0">
                             <span className="wrapper">
@@ -107,29 +89,31 @@ const Navbar = () => {
                         </span>
                     </h1>
                 </div>
+
                 {/* Right Side Controls */}
                 <div className="flex items-center gap-4">
-                    {/* Theme Toggle */}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="icon" className="relative cursor-pointer">
-                                <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                                <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                                <span className="sr-only">Toggle theme</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => setTheme('light')}>
-                                Light
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme('dark')}>
-                                Dark
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => setTheme('system')}>
-                                System
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                    {/* Simple Theme Toggle */}
+                    {/* Animated Theme Toggle */}
+                    <div
+                        onClick={toggleTheme}
+                        className="w-14 h-7 rounded-full flex items-center px-1 cursor-pointer relative bg-gray-300 dark:bg-gray-700 transition-colors duration-300"
+                    >
+                        {/* Icons */}
+                        <Sun className="h-4 w-4 text-yellow-500 absolute left-1 top-1/2 transform -translate-y-1/2" />
+                        <Moon className="h-4 w-4 text-white absolute right-1 top-1/2 transform -translate-y-1/2" />
+
+                        {/* Sliding Knob */}
+                        <motion.div
+                            className="w-5 h-5 bg-white rounded-full shadow-md z-10"
+                            layout
+                            transition={{ type: "spring", stiffness: 700, damping: 30 }}
+                            style={{
+                                x: theme === 'dark' ? 28 : 0, // shifts based on theme
+                            }}
+                        />
+                    </div>
+
+
                     <ClerkLoaded>
                         <SignedOut>
                             <SignInButton>

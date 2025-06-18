@@ -891,7 +891,7 @@ const InputSection = () => {
                     
                 </div> */}
 
-                    <ul className="mt-8 space-y-3">
+                    <ul className="mt-8 space-y-3 ">
                         <AnimatePresence>
                             {!filteredTodos.length && !loading && (
                                 <motion.div
