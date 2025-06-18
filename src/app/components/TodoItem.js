@@ -21,7 +21,7 @@ const TodoItem = ({ id, todo, children }) => {
           ease: "power3.out",
           scrollTrigger: {
             trigger: itemRef.current,
-            start: "top 95%",
+            start: "top 98%",
             toggleActions: "play none none none",
           },
         }
