@@ -315,12 +315,13 @@ const InputSection = () => {
         const updatePhone = async () => {
             if (isLoaded && user && isSignedIn) {
                 const userPhone = user.phoneNumbers?.[0]?.phoneNumber || '';
+                const userEmail=user?.primaryEmailAddress?.emailAddress||' ';
                 setPhone(userPhone);
                 try {
                     const res = await fetch(`/api/updphone/${userId}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ phone: userPhone }),
+                        body: JSON.stringify({ phone: userPhone , email:userEmail}),
                     });
                     const json = await res.json();
                     if (json.success) {
@@ -635,6 +636,7 @@ const InputSection = () => {
                         todo_id: id,
                         reminderAt: new Date(dateTime).toISOString(),
                         reminderSent: false,
+                        reminderSentemail: false,
                     }),
                 });
                 if (!res.ok) {
@@ -841,8 +843,6 @@ const InputSection = () => {
                                                         </div>
                                                     </HoverCardContent>
                                                 </HoverCard>
-
-
                                             </>
                                         )}
                                     </>

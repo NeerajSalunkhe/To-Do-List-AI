@@ -70,7 +70,7 @@ const Navbar = () => {
                 damping: 10,
                 duration: 0.6,
             }}
-            className="w-full flex justify-between  items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-10 backdrop-blur-xs"
+            className="w-full flex justify-between  items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-100 backdrop-blur-xs"
         >
             <header className="w-full flex justify-between  items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-10 backdrop-blur-xs">
                 {/* Logo + Title */}

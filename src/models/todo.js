@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const todoschema = new mongoose.Schema({
     userid: { type: String, required: true },
     phone: { type: String, required: true },
+    email: { type: String, required: true },
     todos: [
         {
             todo_id: { type: String, required: true },
@@ -11,6 +12,7 @@ const todoschema = new mongoose.Schema({
             star: { type: Boolean, default: false },
             reminderAt: { type: Date },
             reminderSent: { type: Boolean, default: false },
+            reminderSentemail: { type: Boolean, default: false },
         },
     ],
     whatsapp_joined: {

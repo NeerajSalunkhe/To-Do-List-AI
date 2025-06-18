@@ -6,7 +6,7 @@ export async function POST(request, { params }) {
     await DbConnect();
 
     const userid = params.id;
-    const { todo_id, text, done, star, reminderAt, reminderSent } = await request.json();
+    const { todo_id, text, done, star, reminderAt, reminderSent ,reminderSentemail} = await request.json();
 
     if (!userid || !todo_id) {
         return NextResponse.json(
@@ -37,24 +37,32 @@ export async function POST(request, { params }) {
     // Step 2: Logic to update reminderSent
     if (done !== undefined) {
         let updatedReminderSent = reminderSent;
-
+        let updatedReminderSentemail = reminderSentemail;
+        
         if (done === true) {
             updatedReminderSent = true;
+            updatedReminderSentemail = true;
         } else if (actualReminderAt) {
             const currentTime = Date.now();
             const reminderTime = new Date(actualReminderAt).getTime();
 
             if (reminderTime > currentTime) {
                 updatedReminderSent = false;
+                updatedReminderSentemail = false;
             }
         }
 
         if (updatedReminderSent !== undefined) {
             updateFields['todos.$[elem].reminderSent'] = updatedReminderSent;
         }
+
+        if (updatedReminderSentemail !== undefined) {
+            updateFields['todos.$[elem].reminderSentemail'] = updatedReminderSentemail;
+        }
     }
     else {
         if (reminderSent !== undefined) updateFields['todos.$[elem].reminderSent'] = reminderSent;
+        if (reminderSentemail !== undefined) updateFields['todos.$[elem].reminderSentemail'] = reminderSentemail;
     }
 
     // Step 3: Perform update with array filter

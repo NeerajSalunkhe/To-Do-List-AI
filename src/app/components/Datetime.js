@@ -162,7 +162,7 @@ export function Calendar24({ onDateTimeChange, userid, todoid ,change}) {
             : "text-muted-foreground"
         }`}
       >
-        {reminderSet ? "✅ Reminder is set for " : "Your reminder will be sent on "}
+        {reminderSet ? "✅ Reminder is set for " : ""}
         <span className="font-medium">{formatDate(date)}</span> at{" "}
         <span className="font-medium">
           {date?.toLocaleTimeString("en-US", {
