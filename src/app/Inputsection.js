@@ -23,6 +23,11 @@ import { CheckCircle, XCircle } from 'lucide-react';
 import Image from 'next/image';
 import NProgress from 'nprogress';
 import { showWhatsAppConnectToast } from './components/showWhatsAppConnectToast';
+
+// import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+// import { motion } from "framer-motion";
+gsap.registerPlugin(ScrollTrigger);
 const FILTERS = {
     ACTIVE: 'active',
     FINISHED: 'finished',
@@ -34,6 +39,7 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
+import TodoItem from './components/TodoItem';
 const InputSection = () => {
     const { isSignedIn, userId } = useAuth();
     const { user, isLoaded } = useUser();
@@ -50,6 +56,7 @@ const InputSection = () => {
     const [joined, setJoined] = useState(false)
     const [loadingjd, setLoadingjd] = useState(false);
     const [settingid, setSettingid] = useState('')
+    const [change, setChange] = useState(false)
     const options = {
         timeZone: 'Asia/Kolkata',
         year: 'numeric',
@@ -59,12 +66,6 @@ const InputSection = () => {
         minute: 'numeric',
         hour12: true,
     };
-
-
-
-
-
-
     const handlereset = (async () => {
         if (!userId) return;
         setLoadingjd(true);
@@ -668,6 +669,7 @@ const InputSection = () => {
                 setSettingid('');
             } finally {
                 NProgress.done();
+                setChange(!change);
             }
         }
     };
@@ -720,347 +722,394 @@ const InputSection = () => {
 
     return (
         <>
-            <section ref={containerRef} className="w-full h-full min-h-screen max-w-4xl mx-auto mt-12 px-4">
-                <motion.div
-                    initial={{ scale: 0.95, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
-                    className="flex flex-col sm:flex-row gap-4 items-center"
-                >
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={handleEnterKey}
-                        placeholder="What do you need to get done?"
-                        className="w-full px-4 py-3 rounded-xl border border-zinc-300 shadow-sm focus:ring-2 focus:ring-purple-500 dark:bg-zinc-900 dark:border-zinc-700 dark:text-white"
-                    />
-                    <Button onClick={handleAddTodo} className="transition-transform hover:scale-105 cursor-pointer">
-                        <PlusCircle className="w-4 h-4 mr-1" /> Add Todo
-                    </Button>
-                </motion.div>
-
-                {!isSignedIn && (
-                    <div className="mt-5 flex justify-center italic text-gray-500">
-                        Sign In to Explore New Features!
-                    </div>
-                )}
-                <div className='mt-8 flex md:flex-row flex-col justify-between md:gap-1 md:justify-between items-center gap-5'>
-                    <div>
-                        {isSignedIn && (
-                            <>
-                                {joined ? (
-                                    <div className='flex justify-center gap-2'>
-                                        <Button variant="secondary" className="">✅ Connected To WhatsApp</Button>
-                                        {
-                                            loadingjd ? <Button size="sm" disabled className="cursor-pointer">
+            <motion.section
+                initial={{ y: 100, opacity: 0 }}     // Start below
+                animate={{ y: 0, opacity: 1 }}       // Move to original position
+                transition={{
+                    type: 'spring',
+                    stiffness: 120,
+                    damping: 10,
+                    duration: 0.6,
+                }}
+                className="w-full flex justify-between items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-10 backdrop-blur-xs"
+            >
+                <section ref={containerRef} className="w-full h-full min-h-screen max-w-4xl mx-auto mt-12 px-4">
+                    <motion.div
+                        initial={{ y: -200, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{
+                            type: 'spring',
+                            stiffness: 120,
+                            damping: 10,
+                            duration: 0.6,
+                        }}
+                        className="flex flex-col sm:flex-row gap-4 items-center"
+                    >
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={handleEnterKey}
+                            placeholder="What do you need to get done?"
+                            className="w-full px-4 py-3 rounded-xl border border-zinc-300 shadow-sm focus:ring-2 focus:ring-purple-500 dark:bg-zinc-900 dark:border-zinc-700 dark:text-white"
+                        />
+                        <Button onClick={handleAddTodo} className="transition-transform hover:scale-105 cursor-pointer">
+                            <PlusCircle className="w-4 h-4 mr-1" /> Add Todo
+                        </Button>
+                    </motion.div>
+                    <motion.div
+                        initial={{ x: -200, opacity: 0 }}
+                        animate={{ x: 0, opacity: 1 }}
+                        transition={{
+                            type: 'spring',
+                            stiffness: 100,
+                            damping: 12,
+                            duration: 0.6,
+                        }}
+                    >
+                        {!isSignedIn && (
+                            <div className="mt-5 flex justify-center italic text-gray-500">
+                                Sign In to Explore New Features!
+                            </div>
+                        )}
+                    </motion.div>
+                    <div className='mt-8 flex md:flex-row flex-col justify-between md:gap-1 md:justify-between items-center gap-5'>
+                        <motion.div
+                            initial={{ x: -200, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{
+                                type: 'spring',
+                                stiffness: 100,
+                                damping: 12,
+                                duration: 0.6,
+                            }}
+                        >
+                            <div>
+                                {isSignedIn && (
+                                    <>
+                                        {joined ? (
+                                            <div className='flex justify-center gap-2'>
+                                                <Button variant="secondary" className="">✅ Connected To WhatsApp</Button>
+                                                {
+                                                    loadingjd ? <Button size="sm" disabled className="cursor-pointer">
+                                                        <Loader2Icon className="animate-spin mr-2" />
+                                                        Please wait...
+                                                    </Button> : <HoverCard>
+                                                        <HoverCardTrigger asChild>
+                                                            <Button variant="secondary" className="cursor-pointer" onClick={handlereset}>
+                                                                Reset
+                                                            </Button>
+                                                        </HoverCardTrigger>
+                                                        <HoverCardContent className="w-72 p-3 rounded-xl shadow-lg bg-background border text-sm">
+                                                            <div className="flex flex-col gap-1">
+                                                                <p className="font-medium text-foreground">Reset WhatsApp Reminder</p>
+                                                                <p className="text-muted-foreground">
+                                                                    If you click this, your current WhatsApp subscription will end.
+                                                                    You won’t receive any more reminders until you re-enable it.
+                                                                </p>
+                                                            </div>
+                                                        </HoverCardContent>
+                                                    </HoverCard>
+                                                }
+                                            </div>
+                                        ) : loadingjd ? (
+                                            <Button size="sm" disabled className="cursor-pointer">
                                                 <Loader2Icon className="animate-spin mr-2" />
                                                 Please wait...
-                                            </Button> : <HoverCard>
-                                                <HoverCardTrigger asChild>
-                                                    <Button variant="secondary" className="cursor-pointer" onClick={handlereset}>
-                                                        Reset
-                                                    </Button>
-                                                </HoverCardTrigger>
-                                                <HoverCardContent className="w-72 p-3 rounded-xl shadow-lg bg-background border text-sm">
-                                                    <div className="flex flex-col gap-1">
-                                                        <p className="font-medium text-foreground">Reset WhatsApp Reminder</p>
-                                                        <p className="text-muted-foreground">
-                                                            If you click this, your current WhatsApp subscription will end.
-                                                            You won’t receive any more reminders until you re-enable it.
-                                                        </p>
-                                                    </div>
-                                                </HoverCardContent>
-                                            </HoverCard>
-                                        }
-                                    </div>
-                                ) : loadingjd ? (
-                                    <Button size="sm" disabled className="cursor-pointer">
-                                        <Loader2Icon className="animate-spin mr-2" />
-                                        Please wait...
-                                    </Button>
-                                ) : (
-                                    <>
-                                        <HoverCard>
-                                            <HoverCardTrigger asChild>
-                                                <Button onClick={openWhatsApp} className="cursor-pointer">
-                                                    Set up WhatsApp Reminders
-                                                </Button>
-                                            </HoverCardTrigger>
-                                            <HoverCardContent className="w-80 rounded-xl shadow-lg p-4 bg-background border">
-                                                <div className="flex flex-col gap-2">
-                                                    <h4 className="text-lg font-semibold text-primary">Enable WhatsApp Reminders 📱</h4>
-                                                    <p className="text-sm text-muted-foreground">
-                                                        Receive a WhatsApp message on the day you’ve scheduled your reminder. Stay organized with a simple click.
-                                                    </p>
-                                                    <ul className="text-sm text-foreground list-disc pl-4">
-                                                        <li>Message sent on your chosen day</li>
-                                                        <li>No app installation needed</li>
-                                                    </ul>
-                                                    <div className="text-xs text-muted-foreground pt-2 border-t mt-2">
-                                                        Works only if you click on <span className="text-blue-600 font-medium">Set up WhatsApp Reminders</span> to enable.
-                                                    </div>
-                                                </div>
-                                            </HoverCardContent>
-                                        </HoverCard>
-
-
-                                    </>
-                                )}
-                            </>
-                        )}
-                    </div>
-                    <div className="flex gap-2 md:justify-end justify-center">
-                        {Object.entries(FILTERS).map(([key, val]) => (
-                            <HoverCard key={uuidv4()}>
-                                <HoverCardTrigger asChild>
-                                    <Button
-                                        key={uuidv4()}
-                                        onClick={() => setFilter(val)}
-                                        variant={filter === val ? 'default' : 'outline'}
-                                        className="transition-all duration-300 capitalize cursor-pointer"
-                                    >
-                                        {val}
-                                    </Button>
-                                </HoverCardTrigger>
-                                <HoverCardContent className="w-64 p-3 rounded-xl shadow-lg bg-background border text-sm">
-                                    <div className="flex flex-col gap-1">
-                                        <p className="font-medium text-foreground">Filter: <span className="capitalize">{val}</span></p>
-                                        <p className="text-muted-foreground">
-                                            Click this to update the list according to this filter.
-                                        </p>
-                                    </div>
-                                </HoverCardContent>
-                            </HoverCard>
-
-                        ))}
-                    </div>
-                </div>
-
-                {/* <div className="flex flex-wrap items-center justify-center mt-7 gap-2 md:flex-row">
-                    
-                </div> */}
-
-                <ul className="mt-8 space-y-3">
-                    <AnimatePresence>
-                        {!filteredTodos.length && !loading && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.9 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.9 }}
-                                transition={{ duration: 0.3 }}
-                                className="flex items-center justify-center"
-                            >
-                                <Image width={40} height={49} src="/empty.svg" alt="No todos" className="w-40 h-40" />
-                            </motion.div>
-                        )}
-
-                        {loading ? (
-                            <div className="flex justify-center items-center">
-                                <div className="flex flex-col space-y-3">
-                                    <Skeleton className="h-[125px] w-[250px] rounded-xl" />
-                                    <div className="space-y-2">
-                                        <Skeleton className="h-4 w-[250px]" />
-                                        <Skeleton className="h-4 w-[200px]" />
-                                    </div>
-                                </div>
-                            </div>
-                        ) : (
-                            filteredTodos.map((todo) => {
-                                const id = isSignedIn ? todo.todo_id : todo.id || uuidv4();
-                                return (
-                                    <motion.li
-                                        key={id}
-                                        layout
-                                        initial={{ opacity: 0, y: 20 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -20 }}
-                                        transition={{ duration: 0.3 }}
-                                        className="todo-item w-full mx-auto py-4 md:px-5 px-3 rounded-2xl flex flex-col gap-3 border shadow-md bg-white dark:bg-zinc-800 dark:text-white"
-                                    >
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div className="flex items-start gap-3 flex-1 min-w-0">
+                                            </Button>
+                                        ) : (
+                                            <>
                                                 <HoverCard>
                                                     <HoverCardTrigger asChild>
-                                                        <Checkbox
-                                                            checked={todo.done}
-                                                            onCheckedChange={() => toggleDone(id)}
-                                                            className="mt-1 transition-transform hover:scale-110 cursor-pointer"
-                                                        />
+                                                        <Button onClick={openWhatsApp} className="cursor-pointer">
+                                                            Set up WhatsApp Reminders
+                                                        </Button>
                                                     </HoverCardTrigger>
-                                                    <HoverCardContent className="w-64 p-3 rounded-xl shadow-lg bg-background border text-sm">
-                                                        <div className="flex flex-col gap-1">
-                                                            <p className="font-medium text-foreground">Mark as Done</p>
-                                                            <p className="text-muted-foreground">
-                                                                Tick this to mark the task as completed.
-                                                                It will move to <strong>All</strong> and <strong>Finished</strong> filters.
+                                                    <HoverCardContent className="w-80 rounded-xl shadow-lg p-4 bg-background border">
+                                                        <div className="flex flex-col gap-2">
+                                                            <h4 className="text-lg font-semibold text-primary">Enable WhatsApp Reminders 📱</h4>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                Receive a WhatsApp message on the day you’ve scheduled your reminder. Stay organized with a simple click.
                                                             </p>
+                                                            <ul className="text-sm text-foreground list-disc pl-4">
+                                                                <li>Message sent on your chosen day</li>
+                                                                <li>No app installation needed</li>
+                                                            </ul>
+                                                            <div className="text-xs text-muted-foreground pt-2 border-t mt-2">
+                                                                Works only if you click on <span className="text-blue-600 font-medium">Set up WhatsApp Reminders</span> to enable.
+                                                            </div>
                                                         </div>
                                                     </HoverCardContent>
                                                 </HoverCard>
-                                                {editingId === id ? (
-                                                    <div className="flex flex-1 gap-2">
-                                                        <input
-                                                            type="text"
-                                                            value={editingText}
-                                                            onChange={(e) => setEditingText(e.target.value)}
-                                                            onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
-                                                            className="w-full px-3 py-2 rounded-md text-sm border border-zinc-300 dark:bg-zinc-900 dark:border-zinc-600"
-                                                            autoFocus
-                                                        />
+
+
+                                            </>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                        </motion.div>
+                        <motion.div
+                            initial={{ x: 200, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            transition={{
+                                type: 'spring',
+                                stiffness: 100,
+                                damping: 12,
+                                duration: 0.6,
+                            }}
+                        >
+                            <div className="flex gap-2 md:justify-end justify-center">
+                                {Object.entries(FILTERS).map(([key, val]) => (
+                                    <HoverCard key={uuidv4()}>
+                                        <HoverCardTrigger asChild>
+                                            <Button
+                                                key={uuidv4()}
+                                                onClick={() => setFilter(val)}
+                                                variant={filter === val ? 'default' : 'outline'}
+                                                className="transition-all duration-300 capitalize cursor-pointer"
+                                            >
+                                                {val}
+                                            </Button>
+                                        </HoverCardTrigger>
+                                        <HoverCardContent className="w-64 p-3 rounded-xl shadow-lg bg-background border text-sm">
+                                            <div className="flex flex-col gap-1">
+                                                <p className="font-medium text-foreground">Filter: <span className="capitalize">{val}</span></p>
+                                                <p className="text-muted-foreground">
+                                                    Click this to update the list according to this filter.
+                                                </p>
+                                            </div>
+                                        </HoverCardContent>
+                                    </HoverCard>
+
+                                ))}
+                            </div>
+                        </motion.div>
+                    </div>
+
+                    {/* <div className="flex flex-wrap items-center justify-center mt-7 gap-2 md:flex-row">
+                    
+                </div> */}
+
+                    <ul className="mt-8 space-y-3">
+                        <AnimatePresence>
+                            {!filteredTodos.length && !loading && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.9 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.9 }}
+                                    transition={{ duration: 0.3 }}
+                                    className="flex items-center justify-center"
+                                >
+                                    <Image width={40} height={49} src="/empty.svg" alt="No todos" className="w-40 h-40" />
+                                </motion.div>
+                            )}
+
+                            {loading ? (
+                                <div className="flex justify-center items-centerr">
+                                    <div className="flex flex-col space-y-3">
+                                        <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+                                        <div className="space-y-2">
+                                            <Skeleton className="h-4 w-[250px]" />
+                                            <Skeleton className="h-4 w-[200px]" />
+                                        </div>
+                                    </div>
+                                </div>
+                            ) : (
+                                filteredTodos.map((todo) => {
+                                    const id = isSignedIn ? todo.todo_id : todo.id || uuidv4();
+                                    return (
+                                        <TodoItem key={todo.todo_id} id={todo.todo_id} todo={todo}>
+                                            <div className="flex items-start justify-between gap-4">
+                                                <div className="flex items-start gap-3 flex-1 min-w-0">
+                                                    <HoverCard>
+                                                        <HoverCardTrigger asChild>
+                                                            <Checkbox
+                                                                checked={todo.done}
+                                                                onCheckedChange={() => toggleDone(id)}
+                                                                className="mt-1 transition-transform hover:scale-110 cursor-pointer"
+                                                            />
+                                                        </HoverCardTrigger>
+                                                        <HoverCardContent className="w-64 p-3 rounded-xl shadow-lg bg-background border text-sm">
+                                                            <div className="flex flex-col gap-1">
+                                                                <p className="font-medium text-foreground">Mark as Done</p>
+                                                                <p className="text-muted-foreground">
+                                                                    Tick this to mark the task as completed.
+                                                                    It will move to <strong>All</strong> and <strong>Finished</strong> filters.
+                                                                </p>
+                                                            </div>
+                                                        </HoverCardContent>
+                                                    </HoverCard>
+                                                    {editingId === id ? (
+                                                        <div className="flex flex-1 gap-2">
+                                                            <input
+                                                                type="text"
+                                                                value={editingText}
+                                                                onChange={(e) => setEditingText(e.target.value)}
+                                                                onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
+                                                                className="w-full px-3 py-2 rounded-md text-sm border border-zinc-300 dark:bg-zinc-900 dark:border-zinc-600"
+                                                                autoFocus
+                                                            />
+                                                            <HoverCard>
+                                                                <HoverCardTrigger asChild>
+                                                                    <Button size="sm" onClick={saveEdit} className="cursor-pointer">
+                                                                        <Check className="w-4 h-4" />
+                                                                    </Button>
+                                                                </HoverCardTrigger>
+                                                                <HoverCardContent className="w-48 p-3 rounded-xl shadow-lg bg-background border text-sm">
+                                                                    <div className="flex flex-col gap-1">
+                                                                        <p className="font-medium text-foreground">Save Changes</p>
+                                                                        <p className="text-muted-foreground">
+                                                                            Click here to save the updated task.
+                                                                        </p>
+                                                                    </div>
+                                                                </HoverCardContent>
+                                                            </HoverCard>
+                                                        </div>
+                                                    ) : (
+                                                        <span
+                                                            className={classNames(
+                                                                'flex-1 break-words whitespace-pre-wrap text-base overflow-hidden',
+                                                                todo.done && 'line-through opacity-60'
+                                                            )}
+                                                        >
+                                                            {todo.text}
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                {editingId !== id && (
+                                                    <div className="flex items-center gap-2">
                                                         <HoverCard>
                                                             <HoverCardTrigger asChild>
-                                                                <Button size="sm" onClick={saveEdit} className="cursor-pointer">
-                                                                    <Check className="w-4 h-4" />
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="ghost"
+                                                                    className="hover:bg-yellow-100 dark:hover:bg-yellow-900 cursor-pointer"
+                                                                    onClick={() => toggleStar(id)}
+                                                                >
+                                                                    <Star
+                                                                        className="w-5 h-5"
+                                                                        color={todo.star ? 'gold' : 'gray'}
+                                                                        fill={todo.star ? 'gold' : 'none'}
+                                                                    />
                                                                 </Button>
                                                             </HoverCardTrigger>
-                                                            <HoverCardContent className="w-48 p-3 rounded-xl shadow-lg bg-background border text-sm">
+                                                            <HoverCardContent className="w-52 p-3 rounded-xl shadow-lg bg-background border text-sm">
                                                                 <div className="flex flex-col gap-1">
-                                                                    <p className="font-medium text-foreground">Save Changes</p>
+                                                                    <p className="font-medium text-amber-300">
+                                                                        {todo.star ? 'Unmark Important' : 'Mark as Important'}
+                                                                    </p>
                                                                     <p className="text-muted-foreground">
-                                                                        Click here to save the updated task.
+                                                                        {todo.star
+                                                                            ? 'Click to remove from important list.'
+                                                                            : 'Click to highlight this task as important.'}
                                                                     </p>
                                                                 </div>
                                                             </HoverCardContent>
                                                         </HoverCard>
+
+                                                        <HoverCard>
+                                                            <HoverCardTrigger asChild>
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="outline"
+                                                                    onClick={() => startEditing(id)}
+                                                                    className="cursor-pointer"
+                                                                >
+                                                                    <Pencil className="w-4 h-4" />
+                                                                </Button>
+                                                            </HoverCardTrigger>
+                                                            <HoverCardContent className="w-52 p-3 rounded-xl shadow-lg bg-background border text-sm">
+                                                                <div className="flex flex-col gap-1">
+                                                                    <p className="font-medium text-foreground">Edit Todo</p>
+                                                                    <p className="text-muted-foreground">
+                                                                        Click here to modify the text of this task.
+                                                                    </p>
+                                                                </div>
+                                                            </HoverCardContent>
+                                                        </HoverCard>
+                                                        <HoverCard>
+                                                            <HoverCardTrigger asChild>
+                                                                <Button
+                                                                    size="icon"
+                                                                    variant="outline"
+                                                                    onClick={() => handleDelete(id)}
+                                                                    className="cursor-pointer"
+                                                                >
+                                                                    <Trash2 className="w-4 h-4" />
+                                                                </Button>
+                                                            </HoverCardTrigger>
+                                                            <HoverCardContent className="w-60 p-3 rounded-xl shadow-lg bg-background border text-sm">
+                                                                <div className="flex flex-col gap-1">
+                                                                    <p className="font-medium text-red-600">Delete Todo</p>
+                                                                    <p className="text-muted-foreground">
+                                                                        Click here to permanently delete this task. This action cannot be undone.
+                                                                    </p>
+                                                                </div>
+                                                            </HoverCardContent>
+                                                        </HoverCard>
+
                                                     </div>
-                                                ) : (
-                                                    <span
-                                                        className={classNames(
-                                                            'flex-1 break-words whitespace-pre-wrap text-base overflow-hidden',
-                                                            todo.done && 'line-through opacity-60'
-                                                        )}
-                                                    >
-                                                        {todo.text}
-                                                    </span>
                                                 )}
                                             </div>
 
-                                            {editingId !== id && (
-                                                <div className="flex items-center gap-2">
-                                                    <HoverCard>
-                                                        <HoverCardTrigger asChild>
-                                                            <Button
-                                                                size="icon"
-                                                                variant="ghost"
-                                                                className="hover:bg-yellow-100 dark:hover:bg-yellow-900 cursor-pointer"
-                                                                onClick={() => toggleStar(id)}
-                                                            >
-                                                                <Star
-                                                                    className="w-5 h-5"
-                                                                    color={todo.star ? 'gold' : 'gray'}
-                                                                    fill={todo.star ? 'gold' : 'none'}
-                                                                />
-                                                            </Button>
-                                                        </HoverCardTrigger>
-                                                        <HoverCardContent className="w-52 p-3 rounded-xl shadow-lg bg-background border text-sm">
-                                                            <div className="flex flex-col gap-1">
-                                                                <p className="font-medium text-amber-300">
-                                                                    {todo.star ? 'Unmark Important' : 'Mark as Important'}
-                                                                </p>
-                                                                <p className="text-muted-foreground">
-                                                                    {todo.star
-                                                                        ? 'Click to remove from important list.'
-                                                                        : 'Click to highlight this task as important.'}
-                                                                </p>
-                                                            </div>
-                                                        </HoverCardContent>
-                                                    </HoverCard>
+                                            {isSignedIn && (
+                                                <div className="mt-1 flex items-baseline justify-end gap-3">
+                                                    <Calendar24
+                                                        userid={user?.id}               // pass current logged-in user's ID
+                                                        todoid={id}         // pass the specific todo ID
+                                                        onDateTimeChange={(dateTime) => setSelectedDateTime(dateTime)}
+                                                        change={change}
+                                                    />
+                                                    {setting && settingid === id ? (
+                                                        <Button size="sm" disabled className="cursor-pointer">
+                                                            <Loader2Icon className="animate-spin" />
+                                                            Please wait
+                                                        </Button>
+                                                    ) : (
+                                                        <HoverCard>
+                                                            <HoverCardTrigger asChild>
+                                                                <Button
+                                                                    variant="outline"
+                                                                    onClick={() => {
+                                                                        if (selectedDateTime) updateReminder(id, selectedDateTime);
 
-                                                    <HoverCard>
-                                                        <HoverCardTrigger asChild>
-                                                            <Button
-                                                                size="icon"
-                                                                variant="outline"
-                                                                onClick={() => startEditing(id)}
-                                                                className="cursor-pointer"
-                                                            >
-                                                                <Pencil className="w-4 h-4" />
-                                                            </Button>
-                                                        </HoverCardTrigger>
-                                                        <HoverCardContent className="w-52 p-3 rounded-xl shadow-lg bg-background border text-sm">
-                                                            <div className="flex flex-col gap-1">
-                                                                <p className="font-medium text-foreground">Edit Todo</p>
-                                                                <p className="text-muted-foreground">
-                                                                    Click here to modify the text of this task.
-                                                                </p>
-                                                            </div>
-                                                        </HoverCardContent>
-                                                    </HoverCard>
-                                                    <HoverCard>
-                                                        <HoverCardTrigger asChild>
-                                                            <Button
-                                                                size="icon"
-                                                                variant="outline"
-                                                                onClick={() => handleDelete(id)}
-                                                                className="cursor-pointer"
-                                                            >
-                                                                <Trash2 className="w-4 h-4" />
-                                                            </Button>
-                                                        </HoverCardTrigger>
-                                                        <HoverCardContent className="w-60 p-3 rounded-xl shadow-lg bg-background border text-sm">
-                                                            <div className="flex flex-col gap-1">
-                                                                <p className="font-medium text-red-600">Delete Todo</p>
-                                                                <p className="text-muted-foreground">
-                                                                    Click here to permanently delete this task. This action cannot be undone.
-                                                                </p>
-                                                            </div>
-                                                        </HoverCardContent>
-                                                    </HoverCard>
+                                                                    }}
 
+                                                                    className="cursor-pointer"
+                                                                >
+                                                                    Set
+                                                                </Button>
+                                                            </HoverCardTrigger>
+                                                            <HoverCardContent className="w-56 p-3 rounded-xl shadow-lg bg-background border text-sm">
+                                                                <div className="flex flex-col gap-1">
+                                                                    <p className="font-medium text-foreground">Set Reminder</p>
+                                                                    <p className="text-muted-foreground">
+                                                                        Click here to confirm and schedule a WhatsApp reminder for the selected date.
+                                                                    </p>
+                                                                </div>
+                                                            </HoverCardContent>
+                                                        </HoverCard>
+
+                                                    )}
                                                 </div>
                                             )}
-                                        </div>
 
-                                        {isSignedIn && (
-                                            <div className="mt-1 flex items-center justify-end gap-3">
-                                                <Calendar24 onDateTimeChange={(dateTime) => setSelectedDateTime(dateTime)} />
-                                                {setting && settingid === id ? (
-                                                    <Button size="sm" disabled className="cursor-pointer">
-                                                        <Loader2Icon className="animate-spin" />
-                                                        Please wait
-                                                    </Button>
-                                                ) : (
-                                                    <HoverCard>
-                                                        <HoverCardTrigger asChild>
-                                                            <Button
-                                                                variant="outline"
-                                                                onClick={() => {
-                                                                    if (selectedDateTime) updateReminder(id, selectedDateTime);
-                                                                }}
-                                                                className="cursor-pointer"
-                                                            >
-                                                                Set
-                                                            </Button>
-                                                        </HoverCardTrigger>
-                                                        <HoverCardContent className="w-56 p-3 rounded-xl shadow-lg bg-background border text-sm">
-                                                            <div className="flex flex-col gap-1">
-                                                                <p className="font-medium text-foreground">Set Reminder</p>
-                                                                <p className="text-muted-foreground">
-                                                                    Click here to confirm and schedule a WhatsApp reminder for the selected date.
-                                                                </p>
-                                                            </div>
-                                                        </HoverCardContent>
-                                                    </HoverCard>
+                                        </TodoItem>
+                                    );
+                                })
+                            )}
+                        </AnimatePresence>
+                    </ul>
+                </section>
 
-                                                )}
-                                            </div>
-                                        )}
-
-                                    </motion.li>
-                                );
-                            })
-                        )}
-                    </AnimatePresence>
-                </ul>
-            </section>
-
+            </motion.section>
             <CopilotPopup
                 instructions="You are assisting the user as best as you can. Answer in the best way possible given the data you have."
                 labels={{ title: 'Popup Assistant', initial: 'Need any help?' }}
             />
             <ToastContainer />
-
         </>
     );
 };

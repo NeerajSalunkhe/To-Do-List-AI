@@ -1,29 +1,28 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import { parseDate } from "chrono-node"
-import { CalendarIcon } from "lucide-react"
+import React, { useEffect, useState } from "react";
+import { parseDate } from "chrono-node";
+import { CalendarIcon } from "lucide-react";
 
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 function formatDate(date) {
-  if (!date) return ""
+  if (!date) return "";
   return date.toLocaleDateString("en-US", {
     day: "2-digit",
     month: "long",
     year: "numeric",
-  })
+  });
 }
 
-// 📌 Always return 5 AM time
 function getScheduledTime(date) {
   const now = new Date();
   const today = new Date();
@@ -37,40 +36,70 @@ function getScheduledTime(date) {
 
   if (isToday) {
     if (currentHour < 23) {
-      date.setHours(23, 0, 0, 0); // 11:00 PM today
+      date.setHours(23, 0, 0, 0); // 11 PM today
     } else {
-      // It's already after 11PM → set to 6AM next day
       date.setDate(date.getDate() + 1);
-      date.setHours(6, 0, 0, 0);
+      date.setHours(6, 0, 0, 0); // 6 AM next day
     }
   } else {
-    // For other days → always set 6:00 AM
-    date.setHours(6, 0, 0, 0);
+    date.setHours(6, 0, 0, 0); // 6 AM other day
   }
+
   return date;
 }
 
+export function Calendar24({ onDateTimeChange, userid, todoid ,change}) {
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState("In 2 days");
+  const [date, setDate] = useState(undefined);
+  const [month, setMonth] = useState(undefined);
+  const [reminderSet, setReminderSet] = useState(false);
 
-export function Calendar24({ onDateTimeChange }) {
-  const [open, setOpen] = useState(false)
-  const [value, setValue] = useState("In 2 days")
-  const [date, setDate] = useState(parseDate(value) || undefined)
-  const [month, setMonth] = useState(date)
-
+  // Fetch reminderAt on mount
   useEffect(() => {
-    if (date) {
-      const reminderDate = getScheduledTime(date)
-      if (onDateTimeChange) {
-        onDateTimeChange(reminderDate)
+    async function fetchReminder() {
+      try {
+        const res = await fetch("/api/reminderat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userid, todoid }),
+        });
+
+        const data = await res.json();
+
+        if (data?.success && data.reminderAt) {
+          const parsed = new Date(data.reminderAt);
+          setDate(parsed);
+          setMonth(parsed);
+          setValue(formatDate(parsed));
+          setReminderSet(true);
+          if (onDateTimeChange) onDateTimeChange(parsed);
+        } else {
+          // fallback to default parse
+          const fallback = parseDate(value);
+          const scheduled = getScheduledTime(fallback);
+          setDate(scheduled);
+          setMonth(scheduled);
+          if (onDateTimeChange) onDateTimeChange(scheduled);
+        }
+      } catch (err) {
+        console.error("Failed to fetch reminderAt", err);
       }
     }
-  }, [onDateTimeChange,date])
+
+    if (userid && todoid) fetchReminder();
+  }, [userid, change,todoid]);
+
+  // Update callback when date changes
+  useEffect(() => {
+    if (date && onDateTimeChange) {
+      onDateTimeChange(date);
+    }
+  }, [date,onDateTimeChange,change]);
 
   return (
     <div className="flex flex-col gap-3">
-      <Label htmlFor="date" className="px-1">
-        Set Reminder
-      </Label>
+      
       <div className="relative flex gap-2">
         <Input
           id="date"
@@ -78,18 +107,19 @@ export function Calendar24({ onDateTimeChange }) {
           placeholder="e.g., Tomorrow, next Friday"
           className="bg-background pr-10"
           onChange={(e) => {
-            setValue(e.target.value)
-            const parsed = parseDate(e.target.value)
+            setValue(e.target.value);
+            const parsed = parseDate(e.target.value);
             if (parsed) {
-              const updated = getScheduledTime(parsed)
-              setDate(updated)
-              setMonth(updated)
+              const updated = getScheduledTime(parsed);
+              setDate(updated);
+              setMonth(updated);
+              setReminderSet(false); // Now edited by user
             }
           }}
           onKeyDown={(e) => {
             if (e.key === "ArrowDown") {
-              e.preventDefault()
-              setOpen(true)
+              e.preventDefault();
+              setOpen(true);
             }
           }}
         />
@@ -113,31 +143,38 @@ export function Calendar24({ onDateTimeChange }) {
               onMonthChange={setMonth}
               onSelect={(selectedDate) => {
                 if (selectedDate) {
-                  const updated = getScheduledTime(selectedDate)
-                  setDate(updated)
-                  setValue(formatDate(updated))
-                  setOpen(false)
+                  const updated = getScheduledTime(selectedDate);
+                  setDate(updated);
+                  setValue(formatDate(updated));
+                  setOpen(false);
+                  setReminderSet(false); // user selected new
                 }
               }}
             />
           </PopoverContent>
         </Popover>
       </div>
-      <div className="text-muted-foreground px-1 text-sm">
-        Your reminder will be sent on{" "}
-        <span className="font-medium">{formatDate(date)}</span>{" "}
-        at{" "}
+
+      <div
+        className={`px-1 text-xs ${
+          reminderSet
+            ? "text-green-600 dark:text-green-400 font-medium"
+            : "text-muted-foreground"
+        }`}
+      >
+        {reminderSet ? "✅ Reminder is set for " : "Your reminder will be sent on "}
+        <span className="font-medium">{formatDate(date)}</span> at{" "}
         <span className="font-medium">
           {date?.toLocaleTimeString("en-US", {
             hour: "2-digit",
             minute: "2-digit",
             hour12: false,
           })}
-        </span>.
+        </span>
+        .
       </div>
-
     </div>
-  )
+  );
 }
 
-export default Calendar24
+export default Calendar24;
