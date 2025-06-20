@@ -52,6 +52,7 @@ export default function RootLayout({ children }) {
             {/* Page Content */}
             <CopilotKit publicApiKey="ck_pub_eaa14f374fe14333610590fb63e7ec31">
               <GlobalLoadingBar />
+              <Navbar/>
               {children}
             </CopilotKit>
           </ThemeProvider>

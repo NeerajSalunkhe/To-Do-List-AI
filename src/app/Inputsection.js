@@ -619,6 +619,7 @@ const InputSection = () => {
     const updateReminder = async (id, dateTime) => {
         // console.log('click');
         // console.log(res);
+        console.log(id,dateTime);
         if (!joined) {
             showWhatsAppConnectToast(openWhatsApp);
         }
@@ -672,6 +673,7 @@ const InputSection = () => {
             } finally {
                 NProgress.done();
                 setChange(!change);
+                setSelectedDateTime(null);
             }
         }
     };
@@ -1060,6 +1062,7 @@ const InputSection = () => {
                                                         userid={user?.id}               // pass current logged-in user's ID
                                                         todoid={id}         // pass the specific todo ID
                                                         onDateTimeChange={(dateTime) => setSelectedDateTime(dateTime)}
+                                                        
                                                         change={change}
                                                     />
                                                     {setting && settingid === id ? (
@@ -1076,7 +1079,6 @@ const InputSection = () => {
                                                                         if (selectedDateTime) updateReminder(id, selectedDateTime);
 
                                                                     }}
-
                                                                     className="cursor-pointer"
                                                                 >
                                                                     Set

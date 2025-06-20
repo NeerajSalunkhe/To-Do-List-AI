@@ -7,7 +7,6 @@ import { CalendarIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -48,15 +47,17 @@ function getScheduledTime(date) {
   return date;
 }
 
-export function Calendar24({ onDateTimeChange, userid, todoid ,change}) {
+export function Calendar24({ onDateTimeChange, userid, todoid, change }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState("In 2 days");
   const [date, setDate] = useState(undefined);
   const [month, setMonth] = useState(undefined);
   const [reminderSet, setReminderSet] = useState(false);
 
-  // Fetch reminderAt on mount
+  // Fetch reminderAt on mount or when userid, todoid, or change changes
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchReminder() {
       try {
         const res = await fetch("/api/reminderat", {
@@ -67,39 +68,47 @@ export function Calendar24({ onDateTimeChange, userid, todoid ,change}) {
 
         const data = await res.json();
 
+        if (!isMounted) return;
+
         if (data?.success && data.reminderAt) {
           const parsed = new Date(data.reminderAt);
           setDate(parsed);
           setMonth(parsed);
           setValue(formatDate(parsed));
           setReminderSet(true);
-          if (onDateTimeChange) onDateTimeChange(parsed);
+          onDateTimeChange?.(parsed);
         } else {
-          // fallback to default parse
           const fallback = parseDate(value);
-          const scheduled = getScheduledTime(fallback);
-          setDate(scheduled);
-          setMonth(scheduled);
-          if (onDateTimeChange) onDateTimeChange(scheduled);
+          if (fallback) {
+            const scheduled = getScheduledTime(fallback);
+            setDate(scheduled);
+            setMonth(scheduled);
+            onDateTimeChange?.(scheduled);
+          }
         }
       } catch (err) {
         console.error("Failed to fetch reminderAt", err);
       }
     }
 
-    if (userid && todoid) fetchReminder();
-  }, [userid, change,todoid]);
-
-  // Update callback when date changes
-  useEffect(() => {
-    if (date && onDateTimeChange) {
-      onDateTimeChange(date);
+    if (userid && todoid) {
+      fetchReminder();
     }
-  }, [date,onDateTimeChange,change]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [userid, todoid, change]); // kept minimal and stable
+
+  // Only call onDateTimeChange if date changes
+  useEffect(() => {
+    if (date) {
+      onDateTimeChange?.(date);
+    }
+  }, [date]);
 
   return (
     <div className="flex flex-col gap-3">
-      
       <div className="relative flex gap-2">
         <Input
           id="date"
@@ -107,13 +116,14 @@ export function Calendar24({ onDateTimeChange, userid, todoid ,change}) {
           placeholder="e.g., Tomorrow, next Friday"
           className="bg-background pr-10"
           onChange={(e) => {
-            setValue(e.target.value);
-            const parsed = parseDate(e.target.value);
+            const text = e.target.value;
+            setValue(text);
+            const parsed = parseDate(text);
             if (parsed) {
               const updated = getScheduledTime(parsed);
               setDate(updated);
               setMonth(updated);
-              setReminderSet(false); // Now edited by user
+              setReminderSet(false);
             }
           }}
           onKeyDown={(e) => {
@@ -147,7 +157,7 @@ export function Calendar24({ onDateTimeChange, userid, todoid ,change}) {
                   setDate(updated);
                   setValue(formatDate(updated));
                   setOpen(false);
-                  setReminderSet(false); // user selected new
+                  setReminderSet(false);
                 }
               }}
             />

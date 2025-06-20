@@ -1,33 +1,9 @@
 'use client';
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useRef } from "react";
 import { motion } from "framer-motion";
-
-gsap.registerPlugin(ScrollTrigger);
 
 const TodoItem = ({ id, todo, children }) => {
   const itemRef = useRef(null);
-
-  useEffect(() => {
-    if (itemRef.current) {
-      gsap.fromTo(
-        itemRef.current,
-        { opacity: 0, x: 50 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: itemRef.current,
-            start: "top 98%",
-            toggleActions: "play none none none",
-          },
-        }
-      );
-    }
-  }, []);
 
   return (
     <motion.li
