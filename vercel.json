@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/renewal-cron",
-      "schedule": "0 17 * * *"
+      "schedule": "30 17 * * *"
     }
   ]
 }
