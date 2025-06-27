@@ -5,7 +5,7 @@ import { GET as emailreminder } from '../send-reminder/route';
 import { GET as emailrenowal } from '../send-renowal/route';
 
 export const config = {
-  schedule: '30 0 * * *', // Runs every day at 5:30 AM IST
+  schedule: '0 2 * * *'  // Runs every day at 7:30 AM IST
 };
 
 export async function GET() {

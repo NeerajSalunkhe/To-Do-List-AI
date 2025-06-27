@@ -21,31 +21,40 @@ function formatDate(date) {
     year: "numeric",
   });
 }
-
 function getScheduledTime(date) {
   const now = new Date();
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+
+  // Convert current UTC time to IST (UTC+5:30)
+  const istOffsetMinutes = 330; // 5.5 hours
+  const istNow = new Date(now.getTime() + istOffsetMinutes * 60 * 1000);
+
+  const currentISTHours = istNow.getUTCHours();
+  const currentISTMinutes = istNow.getUTCMinutes();
+  const currentISTTotalMinutes = currentISTHours * 60 + currentISTMinutes;
 
   const selectedDate = new Date(date);
-  selectedDate.setHours(0, 0, 0, 0);
+  const todayIST = new Date(now.getTime() + istOffsetMinutes * 60 * 1000);
+  todayIST.setUTCHours(0, 0, 0, 0);
 
-  const isToday = today.getTime() === selectedDate.getTime();
-  const currentHour = now.getHours();
+  const selectedDateIST = new Date(selectedDate.getTime() + istOffsetMinutes * 60 * 1000);
+  selectedDateIST.setUTCHours(0, 0, 0, 0);
+
+  const isToday = todayIST.getTime() === selectedDateIST.getTime();
+  const morningThreshold = 7 * 60 + 30; // 7:30 AM in minutes
 
   if (isToday) {
-    if (currentHour < 23) {
-      date.setHours(23, 0, 0, 0); // 11 PM today
+    if (currentISTTotalMinutes < morningThreshold) {
+      date.setHours(7, 30, 0, 0); // Set to 7:30 AM IST today
     } else {
-      date.setDate(date.getDate() + 1);
-      date.setHours(6, 0, 0, 0); // 6 AM next day
+      date.setHours(19, 30, 0, 0); // Set to 7:30 PM IST today
     }
   } else {
-    date.setHours(6, 0, 0, 0); // 6 AM other day
+    date.setHours(7, 30, 0, 0); // Set to 7:30 AM IST for other days
   }
 
   return date;
 }
+
 
 export function Calendar24({ onDateTimeChange, userid, todoid, change }) {
   const [open, setOpen] = useState(false);
@@ -166,11 +175,10 @@ export function Calendar24({ onDateTimeChange, userid, todoid, change }) {
       </div>
 
       <div
-        className={`px-1 text-xs ${
-          reminderSet
-            ? "text-green-600 dark:text-green-400 font-medium"
-            : "text-muted-foreground"
-        }`}
+        className={`px-1 text-xs ${reminderSet
+          ? "text-green-600 dark:text-green-400 font-medium"
+          : "text-muted-foreground"
+          }`}
       >
         {reminderSet ? "✅ Reminder is set for " : ""}
         <span className="font-medium">{formatDate(date)}</span> at{" "}
