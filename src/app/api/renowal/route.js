@@ -24,7 +24,7 @@ export async function POST() {
             const joinedAt = new Date(whatsapp_joined_at).getTime();
             const hoursSinceJoined = (now - joinedAt) / (1000 * 60 * 60);
 
-            if (hoursSinceJoined >= 21){
+            if (hoursSinceJoined >= 6){
                 try {
                     await client.messages.create({
                         from: process.env.TWILIO_WHATSAPP_NUMBER,

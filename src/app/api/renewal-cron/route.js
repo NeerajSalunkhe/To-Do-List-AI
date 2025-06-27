@@ -9,8 +9,15 @@ export const config = {
 };
 
 export async function GET() {
-  await sendReminders();
-  await emailreminder();
-  await emailrenowal();
-  return await sendRenewals();
+  try {
+    await fetch('http://13.51.172.209/api/master-cron');
+    await sendReminders();
+    await emailreminder();
+    await emailrenowal();
+    return await sendRenewals();
+  } catch (err) {
+    console.error("🔥 master-cron error:", err);
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
 }
+

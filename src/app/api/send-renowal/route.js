@@ -28,7 +28,7 @@ export async function GET() {
       const joinedAt = new Date(whatsapp_joined_at).getTime();
       const hoursSinceJoined = (now - joinedAt) / (1000 * 60 * 60);
 
-      if (hoursSinceJoined >= 6) {
+      if (hoursSinceJoined >= 9) {
         try {
           await transporter.sendMail({
             from: `"HelpShare" <${process.env.GMAIL_USER}>`,
