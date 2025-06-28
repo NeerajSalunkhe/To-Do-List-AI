@@ -10,7 +10,7 @@ export const config = {
 
 export async function GET() {
   try {
-    await fetch('http://13.51.172.209/api/master-cron');
+    await fetch('https://contest-tracker-pearl.vercel.app/api/master-cron');
     await sendReminders();
     await emailreminder();
     await emailrenowal();

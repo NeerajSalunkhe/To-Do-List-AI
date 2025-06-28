@@ -11,7 +11,7 @@ export const config = {
 export async function GET() {
   try {
     // Trigger EC2 endpoint (fire and forget or await for safety)
-    await fetch('http://13.51.172.209/api/master-cron');
+    await fetch('https://contest-tracker-pearl.vercel.app/api/master-cron');
 
     // Then run Vercel-side logic
     await sendRenewals();
