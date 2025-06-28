@@ -28,7 +28,7 @@ export async function GET() {
       const joinedAt = new Date(whatsapp_joined_at).getTime();
       const hoursSinceJoined = (now - joinedAt) / (1000 * 60 * 60);
 
-      if (hoursSinceJoined >= 0) {
+      if (hoursSinceJoined > 12) {
         try {
           await transporter.sendMail({
             from: `To-Do List AI`,
