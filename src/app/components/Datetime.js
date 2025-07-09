@@ -118,9 +118,6 @@ export function Calendar24({ onDateTimeChange, userid, todoid, change }) {
 
   return (
     <div className="w-full">
-      <div className="border-1 mb-1 border-gray-650 shadow-2xl shadow-gray-650">
-
-      </div>
       <div className="flex md:justify-baseline md:items-center  gap-3">
         <div className="relative flex gap-2">
           <Input
