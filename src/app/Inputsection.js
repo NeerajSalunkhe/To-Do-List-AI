@@ -737,7 +737,7 @@ const InputSection = () => {
                 }}
                 className="w-full flex justify-between items-center md:px-40 px-1 bg-white/30 dark:bg-black/30 shadow-md dark:shadow-gray-900 sticky top-0 z-10 backdrop-blur-xs"
             >
-                <section ref={containerRef} className="w-full h-full min-h-screen max-w-4xl mx-auto mt-12 px-4 pb-25">
+                <section ref={containerRef} className="w-full h-full min-h-screen max-w-4xl mx-auto mt-5 px-4 pb-25">
                     <motion.div
                         initial={{ y: -200, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
@@ -777,7 +777,7 @@ const InputSection = () => {
                             </div>
                         )}
                     </motion.div>
-                    <div className='mt-8 flex md:flex-row flex-col justify-between md:gap-1 md:justify-between items-center gap-5'>
+                    <div className='mt-5 flex md:flex-row flex-col justify-between md:gap-1 md:justify-between items-center gap-5'>
                         <motion.div
                             initial={{ x: -200, opacity: 0 }}
                             animate={{ x: 0, opacity: 1 }}
@@ -893,7 +893,7 @@ const InputSection = () => {
                     
                 </div> */}
 
-                    <ul className="mt-8 space-y-3 ">
+                    <ul className="mt-5 space-y-3 ">
                         <AnimatePresence>
                             {!filteredTodos.length && !loading && (
                                 <motion.div

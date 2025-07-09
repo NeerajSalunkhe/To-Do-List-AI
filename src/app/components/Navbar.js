@@ -66,22 +66,22 @@ const Navbar = () => {
       <div className="flex md:gap-3 gap-0 min-w-[200px]">
         {animationData && (
           <Lottie
-            className="codejson w-25 h-25 rounded-full object-contain"
+            className="codejson w-15 h-15 rounded-full object-contain"
             animationData={animationData}
             loop={true}
             lottieRef={lottieRef}
           />
         )}
         <h1>
-          <span className="slide md:mt-1 mt-6 my-2 mb-0">
+          <span className="slide md:mt-0 mt-0 my-0 mb-0 fixed md:-top-6 -top-3 md:pt-4 pt-7">
             <span className="wrapper">
               {words.map((word) => (
                 <span
                   key={uuidv4()}
-                  className="flex items-center md:gap-3 gap-0 md:my-5 my-3"
+                  className="flex items-center md:gap-3 gap-0 md:my-3 my-3"
                 >
                   <span className="text-3xl font-bold">{word.text}</span>
-                  <span className="xl:w-10 xl:h-10 md:w-10 md:h-10 w-7 h-7 md:p-2 p-1 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center">
+                  <span className="xl:w-10 xl:h-10 md:w-10 md:h-10 w-7 h-7 md:p-1 p-0 rounded-full bg-white dark:bg-zinc-800 flex items-center justify-center">
                     {word.icon}
                   </span>
                 </span>
